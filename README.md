@@ -20,7 +20,8 @@ yuno is a JSON document store with fulltext search. It's meant for embedding in 
 
 yuno is pretty basic - it has two main components:
 - the document store, which is just the raw JSON objects stored in [leveldb](https://github.com/Level/levelup)
-- the inverted search index, powered by [search-index](https://github.com/fergiemcdowall/search-index). Importantly, fields that will be searchable are passed through a customisable [natural](https://github.com/NaturalNode/natural) language processing pipeline prior to being added to the index, greatly improving speed and memory usage compared to the vanilla search-index
+- the inverted search index, powered by [search-index](https://github.com/fergiemcdowall/search-index)
+- A customisable [natural](https://github.com/NaturalNode/natural) language processing pipeline that is applied to documents before adding them to the index, greatly improving speed and memory usage compared to the vanilla search-index.
 
 **None of this is revolutionary** - actually it's standard in the major search contenders like `elasticsearch` and `solr`. And all the pieces exist already in the node ecosystem. But I couldn't find a node fulltext search and document store that could handle millions of documents, persisted on disk, didn't have crazy memory requirements and could be easily bundled into an electron app.
 
@@ -37,8 +38,6 @@ npm install --save yunodb
 ## Use
 
 ### Create / load a database
-
-calling `yuno`
 
 **`yuno(options, callback)`**
 
