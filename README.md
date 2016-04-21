@@ -2,7 +2,7 @@
 
 A portable, persistent, electron compatible fulltext search + document store database for node.js. LevelDB underneath.
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard%20js-green.svg?style=flat-square)](https://github.com/feross/standard)  [![Travis](https://img.shields.io/travis/blahah/yunodb.svg?maxAge=2592000?style=flat-square)](https://travis-ci.org/blahah/yunodb)  [![npm](https://img.shields.io/npm/v/yunodb.svg?maxAge=2592000?style=flat-square)](https://www.npmjs.com/package/yunodb)  [![cc-zero](https://img.shields.io/badge/license-CC0%20public%20domain-ff69b4.svg?style=flat-square)](https://github.com/blahah/yunodb#license---cc0)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard%20js-green.svg?style=flat-square)](https://github.com/feross/standard)  [![Travis](https://img.shields.io/travis/blahah/yunodb.svg?style=flat-square)](https://travis-ci.org/blahah/yunodb)  [![npm](https://img.shields.io/npm/v/yunodb.svg?style=flat-square)](https://www.npmjs.com/package/yunodb)  [![cc-zero](https://img.shields.io/badge/license-CC0%20public%20domain-ff69b4.svg?style=flat-square)](https://github.com/blahah/yunodb#license---cc0)
 
 - [How it works](https://github.com/blahah/yunodb#how-it-works)
 - [Install](https://github.com/blahah/yunodb#install)
