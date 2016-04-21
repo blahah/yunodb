@@ -21,8 +21,8 @@
     "search-index",
     "electron"
   ],
-  "author": "Richard Smith-Unna <rik@fathomlabs.io>",
-  "license": "CC0",
+  "author": "Richard Smith-Unna <rik@fathomlabs.io> (@blahah)",
+  "license": "CC0-1.0",
   "bugs": {
     "url": "https://github.com/blahah/yunodb/issues"
   },
