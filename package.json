@@ -1,0 +1,43 @@
+{
+  "name": "yunodb",
+  "version": "1.0.0",
+  "description": "portable, persistent, electron compatible fulltext search database",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard && tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blahah/yunodb.git"
+  },
+  "keywords": [
+    "fulltext",
+    "search",
+    "database",
+    "json",
+    "object",
+    "store",
+    "leveldb",
+    "search-index",
+    "electron"
+  ],
+  "author": "Richard Smith-Unna <rik@fathomlabs.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blahah/yunodb/issues"
+  },
+  "homepage": "https://github.com/blahah/yunodb#readme",
+  "dependencies": {
+    "leveldown": "^1.4.5",
+    "levelup": "^1.3.1",
+    "lodash": "^4.11.1",
+    "natural": "github:blahah/natural",
+    "search-index": "^0.8.2"
+  },
+  "devDependencies": {
+    "rimraf": "^2.5.2",
+    "standard": "^6.0.8",
+    "tape": "^4.5.1",
+    "temporary": "0.0.8"
+  }
+}
