@@ -1,12 +1,12 @@
-## yunoDB
+## yunodb
 
-A portable, persistent, electron compatible fulltext search database. LevelDB underneath.
+A portable, persistent, electron compatible fulltext search + document store database for node.js. LevelDB underneath.
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ## How it works
 
-yuno is a JSON document store with fulltext search. It's meant for in in electron apps, focuses solely on text search, and in most cases should handle millions of documents easily.
+yuno is a JSON document store with fulltext search. It's meant for embedding in electron apps, focuses solely on text search, and in most cases should handle millions of documents easily.
 
 yuno is pretty basic - it has two main components:
 - the document store, which is just the raw JSON objects stored in [leveldb](https://github.com/Level/levelup)
