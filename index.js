@@ -4,6 +4,7 @@ var levelup = require('levelup')
 var searchIndex = require('search-index')
 var _ = require('lodash')
 var mkdirp = require('mkdirp')
+var jsonpath = require('jsonpath-plus')
 
 var preprocess = require('./preprocess/preprocess.js')
 
@@ -41,8 +42,12 @@ function Yuno (opts, cb) {
   this.keyField = opts.keyField
 }
 
+Yuno.prototype.getKey = function (doc) {
+  return jsonpath({ json: doc, path: this.keyField })[0]
+}
+
 Yuno.prototype.putOp = function (doc) {
-  return { type: 'put', key: doc[this.keyField], value: doc }
+  return { type: 'put', key: this.getKey(doc), value: doc }
 }
 
 // docs: array of documents to add
@@ -62,11 +67,11 @@ Yuno.prototype.add = function (docs, opts, cb) {
   }
 
   this.docstore.batch(docs.map((d) => {
-    return { type: 'put', key: '' + d[self.keyField], value: JSON.stringify(d) }
+    return { type: 'put', key: '' + self.getKey(d), value: JSON.stringify(d) }
   }), done)
 
   this.index.add(docs.map((d) => {
-    return { id: d[self.keyField], tokens: self.preprocessor.process(d) }
+    return { id: self.getKey(d), tokens: self.preprocessor.process(d) }
   }), done)
   // process the docs for search indexing
 }
@@ -121,7 +126,7 @@ Cursor.prototype.fullResults = function (results, cb) {
   })
 
   results.hits.map((hit, i) => {
-    self.db.docstore.get(hit[self.db.keyField], (err, document) => {
+    self.db.docstore.get(self.db.getKey(hit), (err, document) => {
       if (err) cb(err)
       results.hits[i].document = document
       done(null)

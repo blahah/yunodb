@@ -17,10 +17,20 @@ test('preprocess', function (t) {
 
   t.deepEqual(p.naturalize(obj.vec), expected, 'naturalize a string')
 
-  t.deepEqual(p.process(obj)[0], expected, 'process an object (indexMap is array)')
+  t.deepEqual(p.process(obj), expected, 'process an object (indexMap is array)')
 
   opts.indexMap = { vec: (x) => 'a' }
   p = preprocessor(opts)
-  t.deepEqual(p.process(obj)[0], 'a', 'process an object (indexMap is object)')
+  t.deepEqual(p.process(obj), ['a'], 'process an object (indexMap is object)')
+
+  obj.first = {
+    second: ['intact', 'truncated']
+  }
+
+  // test json paths in index map
+  opts.indexMap = ['first.second[1]']
+  p = preprocessor(opts)
+  t.deepEqual(p.process(obj), ['truncat'])
+
   t.end()
 })
