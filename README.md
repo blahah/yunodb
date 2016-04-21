@@ -2,7 +2,7 @@
 
 A portable, persistent, electron compatible fulltext search + document store database for node.js. LevelDB underneath.
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) []![cc-zero](http://mirrors.creativecommons.org/presskit/icons/zero.svg)]()
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) [![cc-zero](http://mirrors.creativecommons.org/presskit/icons/zero.svg)](https://github.com/blahah/yunodb#license---cc0)
 
 - [How it works](https://github.com/blahah/yunodb#how-it-works)
 - [Install](https://github.com/blahah/yunodb#install)
@@ -12,7 +12,7 @@ A portable, persistent, electron compatible fulltext search + document store dat
   - [Add documents](https://github.com/blahah/yunodb#add-documents)
   - [Search](https://github.com/blahah/yunodb#search)
 - [Contributing](https://github.com/blahah/yunodb#contributing)
-- [License - CC0]()
+- [License - CC0](https://github.com/blahah/yunodb#license---cc0)
 
 ## How it works
 
