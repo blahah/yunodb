@@ -2,7 +2,7 @@
 
 A portable, persistent, electron compatible fulltext search + document store database for node.js. LevelDB underneath.
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) []![cc-zero](http://mirrors.creativecommons.org/presskit/icons/zero.svg)]()
 
 - [How it works](https://github.com/blahah/yunodb#how-it-works)
 - [Install](https://github.com/blahah/yunodb#install)
@@ -12,6 +12,7 @@ A portable, persistent, electron compatible fulltext search + document store dat
   - [Add documents](https://github.com/blahah/yunodb#add-documents)
   - [Search](https://github.com/blahah/yunodb#search)
 - [Contributing](https://github.com/blahah/yunodb#contributing)
+- [License - CC0]()
 
 ## How it works
 
@@ -147,4 +148,14 @@ var cursor = db.search('tortoise', function(err, results) {
 
 ## Contributing
 
+yuno is being built to serve my use-case of embedding pre-made databases in electron apps. If you have another use-case and would like features added, please open an issue to discuss it - I'm happy to add things that will be widely useful.
+
 Contributions are very welcome. **Please** open an issue to discuss any changes you would like to PR, or mention in an existing issue that you plan to work on it.
+
+Ideas for improving performance are particularly welcome.
+
+## License - CC0
+
+https://creativecommons.org/publicdomain/zero/1.0/
+
+yuno is public domain code. Do whatever you want with it. Credit would be appreciated, but it's not required.

@@ -22,7 +22,7 @@
     "electron"
   ],
   "author": "Richard Smith-Unna <rik@fathomlabs.io>",
-  "license": "ISC",
+  "license": "CC0",
   "bugs": {
     "url": "https://github.com/blahah/yunodb/issues"
   },
