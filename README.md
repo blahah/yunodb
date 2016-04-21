@@ -62,8 +62,8 @@ var db = yuno(opts, (err, dbhandle) => {
 `opts` configures the two persistent datastores. Possible key-value pairs are:
 
 - **location** (String, required) - Base directory in which both datastores will be kept.
-- **keyField** (String, required) - Field in each document to be used as a key in the document store.
-- **indexMap** (Array | Object, required) - Fields to index for fulltext searching. See [index mapping](#index_mapping) below for details.
+- **keyField** (String, required) - [JSONpath](https://github.com/s3u/JSONPath#syntax-through-examples) specifying the field in each document to be used as a key in the document store.
+- **indexMap** (Array | Object, required) - [JSONpaths](https://github.com/s3u/JSONPath#syntax-through-examples) specifying the fields in each document to index for fulltext searching. See [index mapping](#index_mapping) below for details.
 
 #### Index mapping
 
