@@ -4,6 +4,15 @@ A portable, persistent, electron compatible fulltext search + document store dat
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
+- [How it works](https://github.com/blahah/yunodb#how-it-works)
+- [Install](https://github.com/blahah/yunodb#install)
+- [Use](https://github.com/blahah/yunodb#use)
+  - [Create / load a database](https://github.com/blahah/yunodb#create--load-a-database)
+    - [Index mapping](https://github.com/blahah/yunodb#index-mapping)
+  - [Add documents](https://github.com/blahah/yunodb#add-documents)
+  - [Search](https://github.com/blahah/yunodb#search)
+- [Contributing](https://github.com/blahah/yunodb#contributing)
+
 ## How it works
 
 yuno is a JSON document store with fulltext search. It's meant for embedding in electron apps, focuses solely on text search, and in most cases should handle millions of documents easily.
@@ -18,19 +27,15 @@ Like, db, **y** **u** **no** exist already??
 
 ![yuno.jpg](yuno.jpg)
 
-## install
+## Install
 
 ```
 npm install --save yunodb
 ```
 
-## use
+## Use
 
-1. create / load a database
-2. add documents
-3. search
-
-### create / load a database
+### Create / load a database
 
 calling `yuno`
 
@@ -60,7 +65,7 @@ var db = yuno(opts, (err, dbhandle) => {
 - **keyField** (String, required) - Field in each document to be used as a key in the document store.
 - **indexMap** (Array | Object, required) - Fields to index for fulltext searching. See [index mapping](#index_mapping) below for details.
 
-#### index mapping
+#### Index mapping
 
 It is quite rare that all fields in a database should be exposed to the user search. More often, we want to allow the user to search certain fields, but retrieve the full document for each result. The `indexMap` option allows you to specify how to index documents.
 
@@ -79,7 +84,7 @@ To fine-tune the processing on a per-field basis, pass an Object where each key 
 
 Custom processing take the field value as a single argument, and their return value (either a string or an array) will be tokenised and added to the index.
 
-### add documents
+### Add documents
 
 **`db.add(documents, options, callback)`**
 
@@ -113,7 +118,7 @@ function trim (str) { return str.trim() }
 db.add(docs, { text: trim }, doneAdding)
 ```
 
-### search
+### Search
 
 **`db.search(query, opts, callback)`**
 
@@ -140,6 +145,6 @@ var cursor = db.search('tortoise', function(err, results) {
 })
 ```
 
-## contributing
+## Contributing
 
 Contributions are very welcome. **Please** open an issue to discuss any changes you would like to PR, or mention in an existing issue that you plan to work on it.
