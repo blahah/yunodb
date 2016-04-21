@@ -2,7 +2,7 @@
 
 A portable, persistent, electron compatible fulltext search + document store database for node.js. LevelDB underneath.
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard) [![cc-zero](http://mirrors.creativecommons.org/presskit/icons/zero.svg)](https://github.com/blahah/yunodb#license---cc0)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard%20js-green.svg?style=flat-square)](https://github.com/feross/standard)  [![Travis](https://img.shields.io/travis/blahah/yunodb.svg?maxAge=2592000?style=flat-square)](https://travis-ci.org/blahah/yunodb)  [![npm](https://img.shields.io/npm/v/yunodb.svg?maxAge=2592000?style=flat-square)](https://www.npmjs.com/package/yunodb)  [![cc-zero](https://img.shields.io/badge/license-CC0%20public%20domain-ff69b4.svg?style=flat-square)](https://github.com/blahah/yunodb#license---cc0)
 
 - [How it works](https://github.com/blahah/yunodb#how-it-works)
 - [Install](https://github.com/blahah/yunodb#install)
@@ -18,12 +18,12 @@ A portable, persistent, electron compatible fulltext search + document store dat
 
 yuno is a JSON document store with fulltext search. It's meant for embedding in electron apps, focuses solely on text search, and in most cases should handle millions of documents easily.
 
-yuno is pretty basic - it has two main components:
+yuno is pretty basic - it has three components:
 - the document store, which is just the raw JSON objects stored in [leveldb](https://github.com/Level/levelup)
 - the inverted search index, powered by [search-index](https://github.com/fergiemcdowall/search-index)
 - A customisable [natural](https://github.com/NaturalNode/natural) language processing pipeline that is applied to documents before adding them to the index, greatly improving speed and memory usage compared to the vanilla search-index.
 
-**None of this is revolutionary** - actually it's standard in the major search contenders like `elasticsearch` and `solr`. And all the pieces exist already in the node ecosystem. But I couldn't find a node fulltext search and document store that could handle millions of documents, persisted on disk, didn't have crazy memory requirements and could be easily bundled into an electron app.
+**None of this is revolutionary** - actually it's standard in fulltext-search database engines. And all the pieces exist already in the node ecosystem. But I couldn't find a node fulltext search and document store that could handle millions of documents, persisted on disk, didn't have crazy memory requirements and could be easily bundled into an electron app.
 
 Like, db, **y** **u** **no** exist already??
 
