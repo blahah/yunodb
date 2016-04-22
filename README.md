@@ -20,8 +20,8 @@ A portable, persistent, electron compatible fulltext search + document store dat
 yuno is a JSON document store with fulltext search. It's meant for embedding in electron apps, focuses solely on text search, and in most cases should handle millions of documents easily.
 
 yuno is pretty basic - it has three components:
-- the document store, which is just the raw JSON objects stored in [leveldb](https://github.com/Level/levelup)
-- the inverted search index, powered by [search-index](https://github.com/fergiemcdowall/search-index)
+- The document store, which is just the raw JSON objects stored in [leveldb](https://github.com/Level/levelup)
+- The inverted search index, powered by [search-index](https://github.com/fergiemcdowall/search-index)
 - A customisable [natural](https://github.com/NaturalNode/natural) language processing pipeline that is applied to documents before adding them to the index, greatly improving speed and memory usage compared to the vanilla search-index.
 
 **None of this is revolutionary** - actually it's standard in fulltext-search database engines. And all the pieces exist already in the node ecosystem. But I couldn't find a node fulltext search and document store that could handle millions of documents, persisted on disk, didn't have crazy memory requirements and could be easily bundled into an electron app.
