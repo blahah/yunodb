@@ -131,7 +131,7 @@ Cursor.prototype.fullResults = function (results, cb) {
   })
 
   results.hits.map((hit, i) => {
-    self.db.docstore.get(self.db.getKey(hit), (err, document) => {
+    self.db.docstore.get(hit.id, (err, document) => {
       if (err) cb(err)
       results.hits[i].document = document
       done(null)
