@@ -11,6 +11,7 @@ A portable, persistent, electron compatible fulltext search + document store dat
     - [Index mapping](https://github.com/blahah/yunodb#index-mapping)
   - [Add documents](https://github.com/blahah/yunodb#add-documents)
   - [Search](https://github.com/blahah/yunodb#search)
+  - [CLI](https://github.com/blahah/yunodb#cli)
 - [Contributing](https://github.com/blahah/yunodb#contributing)
 - [License - CC0](https://github.com/blahah/yunodb#license---cc0)
 
@@ -143,6 +144,46 @@ var cursor = db.search('tortoise', function(err, results) {
     // next page in here
   })
 })
+```
+
+### CLI
+
+yuno has a minimal command-line interface that can be used to create a database from a file containing JSON objects.
+
+Install the CLI:
+
+```bash
+npm install --global yuno
+```
+
+Create a new database:
+
+```bash
+yuno create <database path> <JSON data>
+```
+
+The JSON data file must contain JSON objects, rather than an array. For example:
+
+```json
+{ "id": "1234", "title": "the coleopterist's handbook" }
+{ "id": "4321", "title": "bark and ambrosia beetles of south america" }
+```
+
+You can provide database options as a JSON file using the `--opts` argument:
+
+```bash
+yuno create --opts <JSON options> <database path> <JSON data>
+```
+
+Where the options JSON looks like:
+
+```json
+{
+  "keyField": "id",
+  "indexMap": {
+    "title": true,
+  }
+}
 ```
 
 ## Contributing
