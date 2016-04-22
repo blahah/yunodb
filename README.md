@@ -89,7 +89,7 @@ Custom processing take the field value as a single argument, and their return va
 **`db.add(documents, options, callback)`**
 
 - `documents`, array of JSON-able objects to store
-- `indexMap` optional, overrides the database-wide `indexMap` option
+- `options` optional, can override the database-wide `indexMap` option
 - `callback`, function to call on completion, with a single argument to be passed an error if there was one
 
 e.g.
