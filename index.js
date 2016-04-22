@@ -20,10 +20,15 @@ function Yuno (opts, cb) {
     // TODO: events, self.emit('ready')
   }
 
+  var docstoreOpts = opts.docstore || {
+    keyEncoding: 'string',
+    valueEncoding: 'json'
+  }
+
   mkdirp.sync(opts.location)
 
   this.docstorePath = path.join(opts.location, 'docstore')
-  this.docstore = levelup(opts.location)
+  this.docstore = levelup(opts.location, docstoreOpts)
 
   this.indexPath = path.join(opts.location, 'index')
   searchIndex({
