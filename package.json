@@ -6,6 +6,9 @@
   "scripts": {
     "test": "standard && tape test/*.js"
   },
+  "bin": {
+    "yuno": "./cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/blahah/yunodb.git"
@@ -28,6 +31,8 @@
   },
   "homepage": "https://github.com/blahah/yunodb#readme",
   "dependencies": {
+    "JSONStream": "^1.1.1",
+    "commander": "^2.9.0",
     "jsonpath-plus": "^0.15.0",
     "leveldown": "^1.4.5",
     "levelup": "^1.3.1",
