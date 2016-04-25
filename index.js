@@ -92,7 +92,7 @@ Yuno.prototype.search = function (query, opts, cb) {
     opts = null
   }
   var cursor = Cursor(query, this, opts)
-  cursor.next(cb)
+  cursor.first(cb)
   return cursor
 }
 

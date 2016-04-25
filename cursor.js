@@ -14,25 +14,31 @@ function Cursor (query, db, opts) {
   this.db = db
 }
 
+Cursor.prototype.first = function (cb) {
+  return this.queryWithOffset(0, cb)
+}
+
 Cursor.prototype.next = function (cb) {
   var offset = (this.lastOffset === null) ? 0 : this.lastOffset + this.pageSize
-  this.lastOffset = offset
-
-  var self = this
-  var q = {
-    query: this.query,
-    offset: offset,
-    pageSize: this.pageSize
-  }
-  this.db.index.search(q, (err, results) => {
-    if (err) return cb(err)
-    results.offset = offset
-    self.fullResults(results, cb)
-  })
+  return this.queryWithOffset(offset, cb)
 }
 
 Cursor.prototype.prev = function (cb) {
   var offset = (this.lastOffset === null) ? 0 : this.lastOffset - this.pageSize
+  return this.queryWithOffset(offset, cb)
+}
+
+Cursor.prototype.last = function (cb) {
+  if (this.totalHits) {
+    var penultimatePage = Math.floor(this.totalHits / this.pageSize)
+    var lastPageOffset = penultimatePage * this.pageSize
+    return this.queryWithOffset(lastPageOffset, cb)
+  }
+
+  cb(new Error('cannot get last page until initial query has run (try cursor.first() first)'))
+}
+
+Cursor.prototype.queryWithOffset = function (offset, cb) {
   this.lastOffset = offset
 
   var self = this
