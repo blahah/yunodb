@@ -49,6 +49,7 @@ Cursor.prototype.queryWithOffset = function (offset, cb) {
   }
   this.db.index.search(q, (err, results) => {
     if (err) return cb(err)
+    self.totalHits = results.totalHits
     results.offset = offset
     self.fullResults(results, cb)
   })
