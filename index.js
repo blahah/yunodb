@@ -104,23 +104,43 @@ function Cursor (query, db, opts) {
   if (!opts) opts = defaults
 
   this.pageSize = opts.pageSize || defaults.pageSize
-  this.offset = 0
+  this.lastOffset = null
   this.query = { AND: { '*': db.preprocessor.naturalize(query) } }
   this.db = db
 }
 
 Cursor.prototype.next = function (cb) {
+  var offset = (this.lastOffset === null) ? 0 : this.lastOffset + this.pageSize
+  this.lastOffset = offset
+
   var self = this
   var q = {
     query: this.query,
-    offset: this.offset,
+    offset: offset,
     pageSize: this.pageSize
   }
   this.db.index.search(q, (err, results) => {
     if (err) return cb(err)
+    results.offset = offset
     self.fullResults(results, cb)
   })
-  this.offset += this.pageSize
+}
+
+Cursor.prototype.prev = function (cb) {
+  var offset = (this.lastOffset === null) ? 0 : this.lastOffset - this.pageSize
+  this.lastOffset = offset
+
+  var self = this
+  var q = {
+    query: this.query,
+    offset: offset,
+    pageSize: this.pageSize
+  }
+  this.db.index.search(q, (err, results) => {
+    if (err) return cb(err)
+    results.offset = offset
+    self.fullResults(results, cb)
+  })
 }
 
 Cursor.prototype.fullResults = function (results, cb) {
