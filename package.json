@@ -40,7 +40,7 @@
     "mkdirp": "^0.5.1",
     "natural": "github:blahah/natural",
     "path-exists": "^2.1.0",
-    "search-index": "^0.8.2"
+    "search-index": "0.8.2"
   },
   "devDependencies": {
     "rimraf": "^2.5.2",
