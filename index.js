@@ -116,6 +116,16 @@ Yuno.prototype.del = function (keys, cb) {
   }), done)
 }
 
+Yuno.prototype.close = function (cb) {
+  var errs = []
+  var done = _.after(2, function () {
+    cb(errs.length > 0 ? errs[0] : null)
+  })
+
+  this.docstore.close(done)
+  this.index.close(done)
+}
+
 function requiredOpts (opts, keys, cb) {
   keys.forEach((key) => {
     if (!opts[key]) {
