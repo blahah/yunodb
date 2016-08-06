@@ -1,6 +1,6 @@
 {
   "name": "yunodb",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "portable, persistent, electron compatible fulltext search database",
   "main": "index.js",
   "scripts": {
