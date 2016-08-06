@@ -65,6 +65,8 @@ var db = yuno(opts, (err, dbhandle) => {
 - **location** (String, required) - Base directory in which both datastores will be kept.
 - **keyField** (String, required) - [JSONpath](https://github.com/s3u/JSONPath#syntax-through-examples) specifying the field in each document to be used as a key in the document store.
 - **indexMap** (Array | Object, required) - [JSONpaths](https://github.com/s3u/JSONPath#syntax-through-examples) specifying the fields in each document to index for fulltext searching. See [index mapping](#index-mapping) below for details.
+- **deletable** (Boolean, optional) - Whether documents should be deletable. Setting to true increases index size. Default: false.
+- **ngramLength** (Integer | Array, optional) - ngram length(s) to use when building index.
 
 #### Index mapping
 
@@ -117,6 +119,26 @@ or using a custom `indexMap`:
 function trim (str) { return str.trim() }
 
 db.add(docs, { text: trim }, doneAdding)
+```
+
+### Delete documents
+
+**`db.del(documents, callback)`**
+
+- `documents`, document (object), id (string), or array of documents or ids
+- `callback`, function to call on completion, with a single argument to be passed an error if there was one
+
+e.g.
+
+```js
+// document
+db.del({ id: '1234', otherkey: 'something else' }, done)
+
+// with id
+db.del('1234', done)
+
+// array
+db.del(['1234', '1235', '1236'], done)
 ```
 
 ### Search

@@ -77,3 +77,5 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# local development examples
+examples

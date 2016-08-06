@@ -32,20 +32,20 @@ function Yuno (opts, cb) {
   this.docstore = levelup(opts.location, docstoreOpts)
 
   this.indexPath = path.join(opts.location, 'index')
-  searchIndex({
+  searchIndex(_.defaults({
     indexPath: this.indexPath,
     deletable: false,
     fieldedSearch: false,
     fieldsToStore: ['tokens'],
     nGramLength: 1
-  }, (err, si) => {
+  }, opts), (err, si) => {
     if (err) return cb(err)
     self.index = si
     ready()
   })
 
   this.preprocessor = preprocess(opts)
-  this.keyField = opts.keyField
+  this.keyField = opts.keyField || 'id'
 }
 
 Yuno.prototype.getKey = function (doc) {
@@ -94,6 +94,26 @@ Yuno.prototype.search = function (query, opts, cb) {
   var cursor = Cursor(query, this, opts)
   cursor.first(cb)
   return cursor
+}
+
+Yuno.prototype.del = function (keys, cb) {
+  var self = this
+
+  if (!(_.isArray(keys))) keys = [keys]
+  if (_.isPlainObject(keys[0])) keys = keys.map((doc) => { self.getKey(doc) })
+
+  var errs = []
+  var done = _.after(2, function () {
+    cb(errs.length > 0 ? errs[0] : null)
+  })
+
+  this.docstore.batch(keys.map((key) => {
+    return { type: 'del', key: key }
+  }), done)
+
+  this.index.del(keys.map((key) => {
+    return { id: key }
+  }), done)
 }
 
 function requiredOpts (opts, keys, cb) {
