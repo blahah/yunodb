@@ -32,13 +32,16 @@ function Yuno (opts, cb) {
   this.docstore = levelup(opts.location, docstoreOpts)
 
   this.indexPath = path.join(opts.location, 'index')
-  searchIndex(_.defaults({
+
+  var indexOpts = _.defaults(opts, {
     indexPath: this.indexPath,
     deletable: false,
     fieldedSearch: false,
     fieldsToStore: ['tokens'],
     nGramLength: 1
-  }, opts), (err, si) => {
+  })
+
+  searchIndex(indexOpts, (err, si) => {
     if (err) return cb(err)
     self.index = si
     ready()
