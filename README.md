@@ -10,6 +10,7 @@ A portable, persistent, electron compatible fulltext search + document store dat
   - [Create / load a database](https://github.com/blahah/yunodb#create--load-a-database)
     - [Index mapping](https://github.com/blahah/yunodb#index-mapping)
   - [Add documents](https://github.com/blahah/yunodb#add-documents)
+  - [Delete documents](https://github.com/blahah/yunodb#delete-documents)
   - [Search](https://github.com/blahah/yunodb#search)
   - [CLI](https://github.com/blahah/yunodb#cli)
 - [Contributing](https://github.com/blahah/yunodb#contributing)
