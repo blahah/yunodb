@@ -29,7 +29,7 @@ function Yuno (opts, cb) {
   mkdirp.sync(opts.location)
 
   this.docstorePath = path.join(opts.location, 'docstore')
-  this.docstore = levelup(opts.location, docstoreOpts)
+  this.docstore = levelup(this.docstorePath, docstoreOpts)
 
   this.indexPath = path.join(opts.location, 'index')
 
