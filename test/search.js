@@ -36,11 +36,15 @@ test('streaming search', function (t) {
     eos(adder, function (err) {
       t.error(err, 'documents added without error')
 
-      db.index.get(['1', '2', '3']).on('data', function (d) {
-        console.log('data get', d)
-      })
-
       setTimeout(() => {
+        db.index.tellMeAboutMySearchIndex(function (err, info) {
+          console.log(err, info)
+        })
+
+        db.index.get(['1', '2', '3']).on('data', function (d) {
+          console.log('data get', d)
+        })
+
         var results = []
 
         var keep = function (data) {
@@ -57,7 +61,7 @@ test('streaming search', function (t) {
 
         var search = db.search('new york').on('data', keep)
         eos(search, done)
-      }, 5000)
+      }, 100)
     })
   })
 })

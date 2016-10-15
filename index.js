@@ -39,11 +39,16 @@ function Yuno (opts, cb) {
   this.indexPath = path.join(opts.location, 'index')
 
   var indexOpts = _.defaults(opts, {
-    indexPath: this.indexPath,
-    deletable: false,
-    fieldedSearch: false,
-    fieldsToStore: ['tokens'],
-    nGramLength: 1
+    indexPath: this.indexPath
+    // batchsize: 1000,
+    // preserveCase: true,
+    // storeable: true,
+    // searchable: true,
+    // logLevel: 'debug',
+    // fieldedSearch: true,
+    // nGramLength: 1,
+    // separator: ' ',
+    // stopwords: []
   })
 
   searchIndex(indexOpts, (err, si) => {
@@ -82,10 +87,10 @@ Yuno.prototype.add = function () {
   )
 
   var indexify = through.obj(function (data, enc, cb) {
-    var tokenbag = JSON.stringify({
+    var tokenbag = {
       id: self.getKey(data),
       tokens: self.preprocessor.process(data)
-    })
+    }
     cb(null, tokenbag)
   })
 
