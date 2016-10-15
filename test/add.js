@@ -2,6 +2,8 @@ var yuno = require('../')
 var test = require('tape')
 var tmp = require('temporary')
 var rimraf = require('rimraf')
+var streamify = require('stream-array')
+var pumpify = require('pumpify')
 
 var path = require('path')
 
@@ -18,16 +20,24 @@ test('add', function (t) {
   var doc = { id: '1234', word: 'sesquipedalianism is for deipnosophists' }
 
   yuno(opts, (err, db) => {
-    t.error(err, 'no error creating db')
+    t.error(err, 'db created without error')
 
-    db.add(doc, function (err) {
-      t.error(err, 'no error adding document')
+    var done = function (err) {
+      setTimeout(function () {
+        t.error(err, 'add stream completes without error')
 
-      db.docstore.get(doc.id, function (err, value) {
-        t.error(err, 'no error retrieving doc from docstore')
-        t.equals(JSON.stringify(doc), value, 'doc is exactly as inserted')
-        rimraf(dbpath, {}, t.end)
-      })
-    })
+        db.get(doc.id, function (err, value) {
+          t.error(err, 'added doc retrieved without error')
+          t.equals(value, JSON.stringify(doc), 'doc is exactly as inserted')
+          rimraf(dbpath, {}, t.end)
+        })
+      }, 0)
+    }
+
+    var adder = pumpify(streamify([doc]), db.add())
+
+    adder.on('end', done)
+    adder.on('error', done)
+    adder.on('close', done)
   })
 })

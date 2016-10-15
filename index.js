@@ -6,8 +6,13 @@ var _ = require('lodash')
 var mkdirp = require('mkdirp')
 var jsonpath = require('jsonpath-plus')
 
+var LevelBatch = require('level-batch-stream')
+var BatchStream = require('batch-stream')
+var multi = require('multi-write-stream')
+var through = require('through2')
+var pumpify = require('pumpify')
+
 var preprocess = require('./preprocess/preprocess.js')
-var Cursor = require('./cursor.js')
 
 function Yuno (opts, cb) {
   if (!(this instanceof Yuno)) return new Yuno(opts, cb)
@@ -61,42 +66,53 @@ Yuno.prototype.putOp = function (doc) {
 
 // docs: array of documents to add
 // opts: options for adding
-Yuno.prototype.add = function (docs, opts, cb) {
+Yuno.prototype.add = function () {
   var self = this
-  if (_.isFunction(opts)) cb = opts
-  if (_.isPlainObject(docs)) docs = [docs]
 
-  var errs = []
-  var docb = _.after(2, function () {
-    cb(errs.length > 0 ? errs[0] : null, docs.length)
+  var storeify = through.obj(function (data, enc, cb) {
+    cb(null, {
+      type: 'put',
+      key: '' + self.getKey(data),
+      value: JSON.stringify(data)
+    })
   })
-  var done = function (err) {
-    if (err) errs.push(err)
-    docb()
-  }
 
-  this.docstore.batch(docs.map((d) => {
-    return { type: 'put', key: '' + self.getKey(d), value: JSON.stringify(d) }
-  }), done)
+  var store = pumpify.obj(
+    storeify, new BatchStream({ size: 100 }), new LevelBatch(self.docstore)
+  )
 
-  this.index.add(docs.map((d) => {
-    return { id: self.getKey(d), tokens: self.preprocessor.process(d) }
-  }), done)
-  // process the docs for search indexing
+  var indexify = through.obj(function (data, enc, cb) {
+    var tokenbag = JSON.stringify({
+      id: self.getKey(data),
+      tokens: self.preprocessor.process(data)
+    })
+    cb(null, tokenbag)
+  })
+
+  var index = pumpify.obj(indexify, self.index.add())
+  return multi.obj([store, index])
 }
 
 Yuno.prototype.get = function (key, cb) {
   this.docstore.get(key, cb)
 }
 
-Yuno.prototype.search = function (query, opts, cb) {
-  if (_.isFunction(opts)) {
-    cb = opts
-    opts = null
-  }
-  var cursor = Cursor(query, this, opts)
-  cursor.first(cb)
-  return cursor
+Yuno.prototype.search = function (query, opts) {
+  var self = this
+
+  var q = { query: { AND: { '*': self.preprocessor.naturalize(query) } } }
+  var search = self.index.search(q)
+
+  var lookup = through(function (data, enc, cb) {
+    console.log('result', data)
+    self.docstore.get(data.key, function (err, doc) {
+      if (err) return cb(err)
+      data.document = doc
+      cb(null, data)
+    })
+  })
+
+  return pumpify(search, lookup)
 }
 
 Yuno.prototype.del = function (keys, cb) {
