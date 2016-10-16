@@ -23,21 +23,15 @@ test('add', function (t) {
     t.error(err, 'db created without error')
 
     var done = function (err) {
-      setTimeout(function () {
-        t.error(err, 'add stream completes without error')
+      t.error(err, 'add stream completes without error')
 
-        db.get(doc.id, function (err, value) {
-          t.error(err, 'added doc retrieved without error')
-          t.equals(value, JSON.stringify(doc), 'doc is exactly as inserted')
-          rimraf(dbpath, {}, t.end)
-        })
-      }, 0)
+      db.get(doc.id, function (err, value) {
+        t.error(err, 'added doc retrieved without error')
+        t.deepEqual(value, doc, 'doc is exactly as inserted')
+        rimraf(dbpath, {}, t.end)
+      })
     }
 
-    var adder = pumpify(streamify([doc]), db.add())
-
-    adder.on('end', done)
-    adder.on('error', done)
-    adder.on('close', done)
+    pumpify(streamify([doc]), db.add(done))
   })
 })

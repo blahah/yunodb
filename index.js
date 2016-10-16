@@ -1,18 +1,23 @@
+require('events').EventEmitter.defaultMaxListeners = 0
+
 var path = require('path')
 
 var levelup = require('levelup')
 var searchIndex = require('search-index')
 var _ = require('lodash')
+var after = require('lodash/after')
 var mkdirp = require('mkdirp')
 var jsonpath = require('jsonpath-plus')
 
-var LevelBatch = require('level-batch-stream')
-var BatchStream = require('batch-stream')
+var levelstream = require('level-write-stream')
 var multi = require('multi-write-stream')
 var through = require('through2')
 var pumpify = require('pumpify')
+var eos = require('end-of-stream')
 
 var preprocess = require('./preprocess/preprocess.js')
+
+var noop = function () {}
 
 function Yuno (opts, cb) {
   if (!(this instanceof Yuno)) return new Yuno(opts, cb)
@@ -21,10 +26,8 @@ function Yuno (opts, cb) {
 
   var self = this
 
-  function ready () {
-    if (cb) cb(null, self)
-    // TODO: events, self.emit('ready')
-  }
+  this.preprocessor = preprocess(opts)
+  this.keyField = opts.keyField || 'id'
 
   var docstoreOpts = opts.docstore || {
     keyEncoding: 'string',
@@ -38,17 +41,17 @@ function Yuno (opts, cb) {
 
   this.indexPath = path.join(opts.location, 'index')
 
+  function ready () {
+    if (cb) cb(null, self)
+    // TODO: events, self.emit('ready')
+  }
+
   var indexOpts = _.defaults(opts, {
-    indexPath: this.indexPath
-    // batchsize: 1000,
-    // preserveCase: true,
-    // storeable: true,
-    // searchable: true,
-    // logLevel: 'debug',
-    // fieldedSearch: true,
-    // nGramLength: 1,
-    // separator: ' ',
-    // stopwords: []
+    indexPath: this.indexPath,
+    batchsize: 100,
+    nGramLength: 1,
+    separator: ' ',
+    stopwords: []
   })
 
   searchIndex(indexOpts, (err, si) => {
@@ -56,9 +59,6 @@ function Yuno (opts, cb) {
     self.index = si
     ready()
   })
-
-  this.preprocessor = preprocess(opts)
-  this.keyField = opts.keyField || 'id'
 }
 
 Yuno.prototype.getKey = function (doc) {
@@ -71,30 +71,38 @@ Yuno.prototype.putOp = function (doc) {
 
 // docs: array of documents to add
 // opts: options for adding
-Yuno.prototype.add = function () {
+Yuno.prototype.add = function (cb) {
   var self = this
 
-  var storeify = through.obj(function (data, enc, cb) {
-    cb(null, {
-      type: 'put',
-      key: '' + self.getKey(data),
-      value: JSON.stringify(data)
-    })
+  var cbb = after(2, cb)
+  var alldone = function (err) {
+    if (err) return cb(err)
+    cbb()
+  }
+
+  var storeify = through.obj(function (data, enc, next) {
+    var putOp = self.putOp(data)
+    next(null, putOp)
   })
 
-  var store = pumpify.obj(
-    storeify, new BatchStream({ size: 100 }), new LevelBatch(self.docstore)
-  )
+  var storeadd = levelstream(self.docstore)({ sync: true })
+  eos(storeadd, alldone)
 
-  var indexify = through.obj(function (data, enc, cb) {
+  var store = pumpify.obj(storeify, storeadd)
+
+  var indexify = through.obj(function (data, enc, next) {
     var tokenbag = {
       id: self.getKey(data),
       tokens: self.preprocessor.process(data)
     }
-    cb(null, tokenbag)
+    next(null, tokenbag)
   })
 
-  var index = pumpify.obj(indexify, self.index.add())
+  var indexadd = self.index.add().on('data', noop)
+  eos(indexadd, alldone)
+
+  var index = pumpify.obj(indexify, self.index.defaultPipeline(), indexadd)
+
   return multi.obj([store, index])
 }
 
@@ -105,19 +113,22 @@ Yuno.prototype.get = function (key, cb) {
 Yuno.prototype.search = function (query, opts) {
   var self = this
 
-  var q = { query: { AND: { '*': self.preprocessor.naturalize(query) } } }
-  var search = self.index.search(q)
+  var searchOpts = _.defaults(opts, {
+    pageSize: 1000
+  })
 
-  var lookup = through(function (data, enc, cb) {
-    console.log('result', data)
-    self.docstore.get(data.key, function (err, doc) {
+  var q = { query: [{ AND: { '*': self.preprocessor.naturalize(query) } }] }
+
+  var lookup = through.obj(function (data, enc, cb) {
+    data = JSON.parse(data.toString('utf8'))
+    self.docstore.get(self.getKey(data), function (err, doc) {
       if (err) return cb(err)
       data.document = doc
       cb(null, data)
     })
   })
 
-  return pumpify(search, lookup)
+  return pumpify.obj(self.index.search(q, searchOpts), lookup)
 }
 
 Yuno.prototype.del = function (keys, cb) {
@@ -142,7 +153,7 @@ Yuno.prototype.del = function (keys, cb) {
 
 Yuno.prototype.close = function (cb) {
   var errs = []
-  var done = _.after(2, function () {
+  var done = after(2, function () {
     cb(errs.length > 0 ? errs[0] : null)
   })
 

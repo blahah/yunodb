@@ -1,17 +1,16 @@
 var yuno = require('../')
 var test = require('tape')
 var tmp = require('temporary')
-// var rimraf = require('rimraf')
-var eos = require('end-of-stream')
-var streamify = require('stream-array')
+var rimraf = require('rimraf')
 var pumpify = require('pumpify')
+var JSONStream = require('JSONStream')
+
+var fs = require('fs')
 
 var path = require('path')
 
-var reuters = require('./reuters-000.json')
-
 test('streaming search', function (t) {
-  t.timeoutAfter(10000)
+  t.timeoutAfter(50000)
 
   var tmpdir = new tmp.Dir()
   var dbpath = path.join(tmpdir.path, 'yuno')
@@ -31,37 +30,32 @@ test('streaming search', function (t) {
   yuno(opts, (err, db) => {
     t.error(err, 'db created without error')
 
-    var adder = pumpify(streamify(reuters), db.add())
-
-    eos(adder, function (err) {
+    var done = function (err) {
       t.error(err, 'documents added without error')
 
-      setTimeout(() => {
-        db.index.tellMeAboutMySearchIndex(function (err, info) {
-          console.log(err, info)
-        })
+      var results = []
 
-        db.index.get(['1', '2', '3']).on('data', function (d) {
-          console.log('data get', d)
-        })
+      var keep = function (data) {
+        results.push(data)
+      }
 
-        var results = []
+      var done = function (err) {
+        t.error(err, 'search completes without error')
 
-        var keep = function (data) {
-          results.push(data)
-        }
+        t.equals(results.length, 20, 'correct number of hits')
+        rimraf(dbpath, {}, t.end)
+      }
 
-        var done = function (err) {
-          t.error(err, 'search completes without error')
+      db.search('new york').on('data', keep)
+        .on('end', done)
+        .on('error', done)
+        .on('close', done)
+    }
 
-          console.log(results)
-          t.equals(results.length, 55, 'correct number of hits')
-          // rimraf(dbpath, {}, t.end)
-        }
-
-        var search = db.search('new york').on('data', keep)
-        eos(search, done)
-      }, 100)
-    })
+    pumpify(
+      fs.createReadStream('./node_modules/reuters-21578-json/data/fullFileStream/000.str'),
+      JSONStream.parse(),
+      db.add(done)
+    )
   })
 })
