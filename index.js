@@ -122,12 +122,7 @@ Yuno.prototype.search = function (query, opts) {
   var lookup = through.obj(function (data, enc, cb) {
     data = JSON.parse(data.toString('utf8'))
 
-    const key = self.getKey(data)
-    if (!key) return cb(
-      new Error(`could not get key for data ${JSON.stringify(data)}`)
-    )
-
-    self.docstore.get(key, function (err, doc) {
+    self.docstore.get(data.id, function (err, doc) {
       if (err) return cb(err)
       data.document = doc
       cb(null, data)
