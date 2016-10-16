@@ -123,7 +123,9 @@ Yuno.prototype.search = function (query, opts) {
     data = JSON.parse(data.toString('utf8'))
 
     const key = self.getKey(data)
-    if (!key) return cb(new Error('could not get key for data', data))
+    if (!key) return cb(
+      new Error(`could not get key for data ${JSON.stringify(data)}`)
+    )
 
     self.docstore.get(key, function (err, doc) {
       if (err) return cb(err)
