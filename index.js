@@ -120,7 +120,7 @@ Yuno.prototype.search = function (query, opts) {
   var q = { query: [{ AND: { '*': self.preprocessor.naturalize(query) } }] }
 
   var lookup = through.obj(function (data, enc, cb) {
-    data = JSON.parse(data.toString('utf8'))
+    if (typeof data === 'string') data = JSON.parse(data.toString('utf8'))
 
     self.docstore.get(data.id, function (err, doc) {
       if (err) return cb(err)
