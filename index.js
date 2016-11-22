@@ -74,7 +74,8 @@ Yuno.prototype.putOp = function (doc) {
 Yuno.prototype.add = function (cb) {
   var self = this
 
-  var cbb = after(2, cb)
+  cb = cb || noop
+  var cbb = after(2)
   var alldone = function (err) {
     if (err) return cb(err)
     cbb()
