@@ -75,7 +75,7 @@ Yuno.prototype.add = function (cb) {
   var self = this
 
   cb = cb || noop
-  var cbb = after(2)
+  var cbb = after(2, cb)
   var alldone = function (err) {
     if (err) return cb(err)
     cbb()
