@@ -46,14 +46,14 @@ npm install --save yunodb
 e.g.
 
 ```
-var yuno = require('yuno')
+var yuno = require('yunodb')
 
 var dbopts = {
   location: './.yuno',
   keyField: 'id',
   indexMap: ['text']
 }
-var db = yuno(opts, (err, dbhandle) => {
+var db = yuno(dbopts, (err, dbhandle) => {
   if (err) throw err
 
   // do stuff with the db
