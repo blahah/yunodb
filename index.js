@@ -117,7 +117,7 @@ Yuno.prototype.search = function (query, opts) {
   var searchOpts = _.defaults(opts, {})
 
   var q = {
-    query: [{ AND: { '*': self.preprocessor.naturalize(query) } }]
+    query: [{ AND: { '*': self.preprocessor.naturalize(query) } }],
     pageSize: opts.limit || 10000
   }
 
