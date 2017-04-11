@@ -114,11 +114,12 @@ Yuno.prototype.get = function (key, cb) {
 Yuno.prototype.search = function (query, opts) {
   var self = this
 
-  var searchOpts = _.defaults(opts, {
-    pageSize: 1000
-  })
+  var searchOpts = _.defaults(opts, {})
 
-  var q = { query: [{ AND: { '*': self.preprocessor.naturalize(query) } }] }
+  var q = {
+    query: [{ AND: { '*': self.preprocessor.naturalize(query) } }]
+    pageSize: opts.limit || 10000
+  }
 
   var lookup = through.obj(function (data, enc, cb) {
     if (typeof data === 'string') data = JSON.parse(data.toString('utf8'))
