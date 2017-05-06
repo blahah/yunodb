@@ -2,7 +2,7 @@ require('events').EventEmitter.defaultMaxListeners = 0
 
 var path = require('path')
 
-var levelup = require('levelup')
+var level = require('level')
 var searchIndex = require('search-index')
 var _ = require('lodash')
 var after = require('lodash/after')
@@ -37,7 +37,7 @@ function Yuno (opts, cb) {
   mkdirp.sync(opts.location)
 
   this.docstorePath = path.join(opts.location, 'docstore')
-  this.docstore = levelup(this.docstorePath, docstoreOpts)
+  this.docstore = level(this.docstorePath, docstoreOpts)
 
   this.indexPath = path.join(opts.location, 'index')
 
