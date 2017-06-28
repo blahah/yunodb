@@ -42,7 +42,7 @@ test('streaming search', function (t) {
       var done = function (err) {
         t.error(err, 'search completes without error')
 
-        t.equals(results.length, 20, 'correct number of hits')
+        t.equals(results.length, 55, 'correct number of hits')
         rimraf(dbpath, {}, t.end)
       }
 

@@ -79,3 +79,7 @@ jspm_packages
 
 # local development examples
 examples
+
+# stupid files
+yarn.lock
+package-lock.json

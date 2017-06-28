@@ -50,9 +50,10 @@ function Yuno (opts, cb) {
   var indexOpts = _.defaults(opts, {
     indexPath: this.indexPath,
     batchsize: 100,
+    fieldedSearch: false,
     nGramLength: 1,
-    separator: ' ',
-    stopwords: []
+    separator: /[|' .,\-|(\n)]+/,
+    stopwords: require('stopword').en
   })
 
   searchIndex(indexOpts, (err, si) => {

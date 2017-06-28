@@ -21,7 +21,7 @@ function Vector (terms) {
 }
 
 function stripPunctuation (term) {
-  return term.replace(/\W+/g, '')
+  return term.replace(/\W+/g, '').replace(/<[^>]+>/g, '')
 }
 
 function stripTag (pair) {
