@@ -18,6 +18,7 @@ var eos = require('end-of-stream')
 var preprocess = require('./preprocess/preprocess.js')
 
 var noop = function () {}
+var delify = key => ({ type: 'del', key: key })
 
 function Yuno (opts, cb) {
   if (!(this instanceof Yuno)) return new Yuno(opts, cb)
@@ -138,20 +139,15 @@ Yuno.prototype.del = function (keys, cb) {
   var self = this
 
   if (!(_.isArray(keys))) keys = [keys]
-  if (_.isPlainObject(keys[0])) keys = keys.map((doc) => { self.getKey(doc) })
+  if (_.isPlainObject(keys[0])) keys = keys.map(doc => self.getKey(doc))
 
   var errs = []
   var done = _.after(2, function () {
     cb(errs.length > 0 ? errs[0] : null)
   })
 
-  this.docstore.batch(keys.map((key) => {
-    return { type: 'del', key: key }
-  }), done)
-
-  this.index.del(keys.map((key) => {
-    return { id: key }
-  }), done)
+  this.docstore.batch(keys.map(delify), done)
+  this.index.del(keys, done)
 }
 
 Yuno.prototype.close = function (cb) {
