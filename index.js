@@ -109,6 +109,22 @@ Yuno.prototype.add = function (cb) {
   return multi.obj([store, index])
 }
 
+Yuno.prototype.update = function (cb) {
+  var storeify = through.obj(function (data, enc, next) {
+    var putOp = self.putOp(data)
+    next(null, putOp)
+  })
+
+  var store = pumpify.obj(
+    storeify,
+    levelstream(self.docstore)({ sync: true })
+  )
+
+  eos(store, cb || noop)
+
+  return store
+}
+
 Yuno.prototype.get = function (key, cb) {
   this.docstore.get(key, cb)
 }
