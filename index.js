@@ -44,7 +44,7 @@ function Yuno (opts, cb) {
 
   function ready () {
     if (cb) cb(null, self)
-    // TODO: events, self.emit('ready')
+    // TODO: events, self.emit('ready').
   }
 
   var indexOpts = _.defaults(opts, {
@@ -110,6 +110,8 @@ Yuno.prototype.add = function (cb) {
 }
 
 Yuno.prototype.update = function (cb) {
+  var self = this
+
   var storeify = through.obj(function (data, enc, next) {
     var putOp = self.putOp(data)
     next(null, putOp)
