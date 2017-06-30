@@ -101,10 +101,10 @@ Yuno.prototype.add = function (cb) {
     next(null, tokenbag)
   })
 
-  var indexadd = self.index.feed({ objectMode: true }).on('data', noop)
+  var indexadd = self.index.feed({ objectMode: true })
   eos(indexadd, alldone)
 
-  var index = pumpify.obj(indexify, self.index.defaultPipeline(), indexadd)
+  var index = pumpify.obj(indexify, indexadd)
 
   return multi.obj([store, index])
 }
