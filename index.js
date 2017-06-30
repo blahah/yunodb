@@ -52,8 +52,8 @@ function Yuno (opts, cb) {
     batchsize: 100,
     fieldedSearch: false,
     nGramLength: 1,
-    separator: /[|' .,\-|(\n)]+/,
-    stopwords: require('stopword').en
+    separator: ' ',
+    stopwords: []
   })
 
   searchIndex(indexOpts, (err, si) => {

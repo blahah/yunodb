@@ -21,7 +21,9 @@ Preprocessor.prototype.naturalize = function (str) {
     .lowercase()
     .stripPunctuation()
     .filterNonWords()
-    .stem().terms
+    .removeStopwords()
+    .stem()
+    .terms
 }
 
 Preprocessor.prototype.createPipeline = function (opts) {

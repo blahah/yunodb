@@ -6,6 +6,7 @@ var path = require('path')
 var rules = path.join(__dirname, './tagger/tr_from_posjs.txt')
 var lexicon = path.join(__dirname, './tagger/lexicon_from_posjs.json')
 var tagger = new natural.BrillPOSTagger(lexicon, rules, 'N')
+var sw = require('stopword')
 
 inherits(Vector, Array)
 
@@ -33,7 +34,7 @@ function isWord (term) {
 }
 
 Vector.prototype.eatString = function (string) {
-  this.terms = tokenize(string.replace('/', ' '))
+  this.terms = tokenize(string.replace(/[|'.,/\\(\n)]+/, ' '))
 }
 
 Vector.prototype.lowercase = function () {
@@ -42,6 +43,11 @@ Vector.prototype.lowercase = function () {
 
 Vector.prototype.trim = function () {
   return Vector(this.terms.map((s) => { return s.trim() }))
+}
+
+Vector.prototype.removeStopwords = function (lang) {
+  if (!lang) lang = 'en'
+  return Vector(sw.removeStopwords(this.terms, sw[lang]))
 }
 
 Vector.prototype.tag = function () {
