@@ -15,7 +15,8 @@ var through = require('through2')
 var pumpify = require('pumpify')
 var eos = require('end-of-stream')
 
-var preprocess = require('./preprocess/preprocess.js')
+var naturalizer = require('nala-stream/preprocess')
+var nala = require('nala-stream')
 
 var noop = function () {}
 var delify = key => ({ type: 'del', key: key })
@@ -27,7 +28,8 @@ function Yuno (opts, cb) {
 
   var self = this
 
-  this.preprocessor = preprocess(opts)
+  this.preprocessor = naturalizer(opts)
+  this.nalaify = () => nala(opts)
   this.keyField = opts.keyField || 'id'
 
   var docstoreOpts = opts.docstore || {
@@ -93,18 +95,17 @@ Yuno.prototype.add = function (cb) {
 
   var store = pumpify.obj(storeify, storeadd)
 
-  var indexify = through.obj(function (data, enc, next) {
-    var tokenbag = {
-      id: self.getKey(data),
-      tokens: self.preprocessor.process(data)
-    }
-    next(null, tokenbag)
-  })
+  var indexify = through.obj(
+    (data, enc, next) => next(null, {
+      id: self.getKey(data.input),
+      tokens: data.terms
+    })
+  )
 
   var indexadd = self.index.feed({ objectMode: true })
   eos(indexadd, alldone)
 
-  var index = pumpify.obj(indexify, indexadd)
+  var index = pumpify.obj(self.nalaify(), indexify, indexadd)
 
   return multi.obj([store, index])
 }
