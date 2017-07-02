@@ -41,7 +41,7 @@
     "lodash": "^4.16.4",
     "mkdirp": "^0.5.1",
     "multi-write-stream": "^2.0.1",
-    "nala-stream": "0.0.1",
+    "nala-stream": "^0.0.3",
     "natural": "blahah/natural",
     "path-exists": "^3.0.0",
     "pumpify": "^1.3.5",
